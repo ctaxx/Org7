@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application value = "suki!!!">
+    <class name = "MainClass">
+        <method name = "main"/>
+    </class> 
+    <class name = "Window">
+        <method name = "open"/>
+        <method name = "close"/>
+        <method name = "show"/>
+        <method name = "hide"/>
+    </class>     
+    <class name = "DataBase">
+        <method name = "connect"/>
+        <method name = "disconnect"/>
+        <method name = "getData"/>
+    </class>     
+</application>

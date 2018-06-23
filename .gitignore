@@ -1,0 +1,6 @@
+.idea
+*/target
+bin/
+.vertx
+*.iml
+api-gateway/api-gateway.iml
