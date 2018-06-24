@@ -12,8 +12,11 @@ import org.w3c.dom.Node;
 
 import w_ave.org7.NewItemDialog.NewItemDialogListener;
 import w_ave.org7.reading.AbstractIntentFactory;
+import w_ave.org7.reading.FactoryBuilder;
 import w_ave.org7.reading.PdfIntentFactory;
 import w_ave.org7.reading.WebIntentFactory;
+import w_ave.org7.reading.FB2IntentFactory;
+import w_ave.org7.reading.EpubIntentFactory;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.FragmentManager;
@@ -44,7 +47,7 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 	ListAdapter2 adapter;
 	TextView textView1;
 	Button startButton, stopButton, runButton;
-	AbstractIntentFactory intentFactory;
+	FactoryBuilder factoryBuilder = new FactoryBuilder();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,21 +73,7 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 				
 				if (element.hasAttribute("path")&& element.hasAttribute("type")){
 				
-//					String type = "pdf";
-					String type = element.getAttribute("type");
-//					String path = "/Memory.pdf";
-					String path = element.getAttribute("path");
-					Intent intent = null;
-				
-					if (type.equals("pdf")){
-						intentFactory = new PdfIntentFactory();
-						intent = intentFactory.getIntent(path);
-					}
-				
-					if (type.equals("html")){
-						intentFactory = new WebIntentFactory();
-						intent = intentFactory.getIntent(path);
-					}
+					Intent intent = factoryBuilder.getIntent(element.getAttribute("type"), element.getAttribute("path"));
 				
 					// Verify it resolves
 					PackageManager packageManager = getPackageManager();
@@ -239,8 +228,12 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 			stopButton.setEnabled(true);
 		}else{
 			startButton.setEnabled(true);
-			runButton.setEnabled(true);
 			stopButton.setEnabled(false);
+			if (element.hasAttribute("type")&& element.hasAttribute("path")){
+				runButton.setEnabled(true);
+			}else{
+				runButton.setEnabled(false);
+			}
 		}
 	}
 }
