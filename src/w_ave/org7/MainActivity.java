@@ -68,11 +68,12 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 				Item item = adapter.getSelectedItem();
 				Element element = (Element) item.getNode();
 				
-//				if (element.hasAttribute("path")&& element.hasAttribute("type")){
-				if (true){
+				if (element.hasAttribute("path")&& element.hasAttribute("type")){
 				
-					String type = "pdf";
-					String path = "/Memory.pdf";
+//					String type = "pdf";
+					String type = element.getAttribute("type");
+//					String path = "/Memory.pdf";
+					String path = element.getAttribute("path");
 					Intent intent = null;
 				
 					if (type.equals("pdf")){
