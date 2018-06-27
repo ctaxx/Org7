@@ -85,9 +85,6 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 						element.setAttribute("timestamp", dateTimeToShortForm(date));
 						parser.saveListToXML();
 						
-//						startButton.setEnabled(false);
-//						runButton.setEnabled(false);
-//						stopButton.setEnabled(true);
 						showBottomInformation(item);
 					}
 				}
@@ -107,8 +104,6 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 				element.setAttribute("timestamp", dateTimeToShortForm(date));
 				parser.saveListToXML();
 				
-//				startButton.setEnabled(false);
-//				stopButton.setEnabled(true);
 				showBottomInformation(item);
 			}
 		});
@@ -148,14 +143,6 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 							}
 					parser.saveListToXML();
 					
-//					if (element.hasAttribute("type")&& element.hasAttribute("path")){
-//						runButton.setEnabled(true);
-//					}else{
-//						runButton.setEnabled(false);
-//					}
-//					
-//					startButton.setEnabled(true);
-//					stopButton.setEnabled(false);
 					showBottomInformation(item);
 				}			
 			}

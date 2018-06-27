@@ -28,6 +28,11 @@ public class FactoryBuilder {
 			intentFactory = new EpubIntentFactory();
 			return intentFactory.getIntent(path);
 		}
+		
+		if (type.equals("mp4")){
+			intentFactory = new VideoIntentFactory();
+			return intentFactory.getIntent(path);
+		}
 		return null;	
 	}
 	
