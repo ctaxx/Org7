@@ -11,12 +11,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import w_ave.org7.NewItemDialog.NewItemDialogListener;
-import w_ave.org7.reading.AbstractIntentFactory;
 import w_ave.org7.reading.FactoryBuilder;
-import w_ave.org7.reading.PdfIntentFactory;
-import w_ave.org7.reading.WebIntentFactory;
-import w_ave.org7.reading.FB2IntentFactory;
-import w_ave.org7.reading.EpubIntentFactory;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.FragmentManager;
@@ -82,7 +77,18 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 
 					// Start an activity if it's safe
 					if (isIntentSafe) {
-						startActivity(intent);
+						startActivityForResult(intent,1);
+	// ToDo: this code is the same as in startButton
+	// if you cancel opening the document you have to delete timestamp
+	// and revert button to initial state
+						Date date = new Date();
+						element.setAttribute("timestamp", dateTimeToShortForm(date));
+						parser.saveListToXML();
+						
+//						startButton.setEnabled(false);
+//						runButton.setEnabled(false);
+//						stopButton.setEnabled(true);
+						showBottomInformation(item);
 					}
 				}
 			}
@@ -100,8 +106,10 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 	
 				element.setAttribute("timestamp", dateTimeToShortForm(date));
 				parser.saveListToXML();
-				startButton.setEnabled(false);
-				stopButton.setEnabled(true);
+				
+//				startButton.setEnabled(false);
+//				stopButton.setEnabled(true);
+				showBottomInformation(item);
 			}
 		});
 		
@@ -139,9 +147,16 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 								e.printStackTrace();
 							}
 					parser.saveListToXML();
-					startButton.setEnabled(true);
-					runButton.setEnabled(true);
-					stopButton.setEnabled(false);
+					
+//					if (element.hasAttribute("type")&& element.hasAttribute("path")){
+//						runButton.setEnabled(true);
+//					}else{
+//						runButton.setEnabled(false);
+//					}
+//					
+//					startButton.setEnabled(true);
+//					stopButton.setEnabled(false);
+					showBottomInformation(item);
 				}			
 			}
 		});
@@ -206,6 +221,15 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent intent){
+		if (requestCode == 1){
+//			if (resultCode == RESULT_OK){
+				Toast.makeText(this, "we have received the data "+ resultCode, Toast.LENGTH_LONG).show();
+//			}
+		}
 	}
 	
 	private String dateTimeToShortForm(Date date){
