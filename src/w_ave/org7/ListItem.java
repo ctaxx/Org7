@@ -53,12 +53,12 @@ public class ListItem implements Item {
 
 	@Override
 	public boolean getOpened() {
-		return isOpened;
+		return this.isOpened;
 	}
 
 	@Override
-	public void setOpened(boolean b) {
-		isOpened = b;
+	public void setOpened(boolean isOpened) {
+		this.isOpened = isOpened;
 	}
 
 	@Override
@@ -94,8 +94,8 @@ public class ListItem implements Item {
 	}
 
 	@Override
-	public void setSelected(boolean b) {
-		isSelected = b;
+	public void setSelected(boolean isSelected) {
+		this.isSelected = isSelected;
 		
 	}
 

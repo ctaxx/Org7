@@ -1,40 +1,44 @@
 package w_ave.org7;
 
 import java.io.File;
-
 import org.w3c.dom.Node;
 
 public class FileItem implements Item{
-	File file; // 1
-	ArrayListEx childs; // 2
+	File file; 
+	ArrayListEx childs;
 	private boolean isOpened;
 	
 	private Item ancestor;
 	private int level;
 	
 	private Node node;
+	
+	private boolean isSelected;
 		
 	public FileItem (File f) {
-		file = f; // 3
+		file = f;
 	}
 		
 	@Override
-	public String getTitle() { // 4
+	public String getTitle() {
 	  return file.getName();
 	}
 
 	@Override
-	public int getIconResource() { // 5
+	public int getIconResource() {
 	  if (file.isDirectory()) {
-	    if (getCountChilds() > 0)
-	      return R.drawable.folder;
+//	    if (getCountChilds() > 0)
+		if (isSelected)
+	      return R.drawable.redfolder;
 	    return R.drawable.folder;
 	  }
+	  if (isSelected)
+		  return R.drawable.redfile;
 	  return R.drawable.file;
 	}
 
 	@Override
-	public ArrayListEx getChilds() { // 6
+	public ArrayListEx getChilds() { 
 	  if (childs != null)
 	    return childs;
 		
@@ -50,7 +54,7 @@ public class FileItem implements Item{
 	  return childs;
 	}
 
-	private int getCountChilds() { // 7
+	private int getCountChilds() {
 	  if (childs != null)
 	    return childs.size();
 			
@@ -66,8 +70,8 @@ public class FileItem implements Item{
 	}
 
 	@Override
-	public void setOpened(boolean b) {
-		this.isOpened = b;
+	public void setOpened(boolean isOpened) {
+		this.isOpened = isOpened;
 		
 	}
 
@@ -104,14 +108,13 @@ public class FileItem implements Item{
 	}
 
 	@Override
-	public void setSelected(boolean b) {
-		// TODO Auto-generated method stub
+	public void setSelected(boolean isSelected) {
+		this.isSelected = isSelected;
 		
 	}
 
 	@Override
 	public boolean getSelected() {
-		// TODO Auto-generated method stub
-		return false;
+		return this.isSelected;
 	}
 }

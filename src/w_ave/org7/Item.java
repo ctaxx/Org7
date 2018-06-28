@@ -4,7 +4,7 @@ import org.w3c.dom.Node;
 
 public interface Item {
 	public boolean getOpened();
-	public void setOpened(boolean b);
+	public void setOpened(boolean isOpened);
 	public void setAncestor(Item ancestor);
 	public Item getAncestor();
 	public String getTitle();
@@ -14,6 +14,6 @@ public interface Item {
 	public int getLevel();
 	public void setNode(Node node);
 	public Node getNode();
-	public void setSelected(boolean b);
+	public void setSelected(boolean isSelected);
 	public boolean getSelected();
 }
