@@ -43,6 +43,7 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 	TextView textView1;
 	Button startButton, stopButton, runButton;
 	FactoryBuilder factoryBuilder = new FactoryBuilder();
+	private Item selectedItem = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +86,7 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 						element.setAttribute("timestamp", dateTimeToShortForm(date));
 						parser.saveListToXML();
 						
-						showBottomInformation(item);
+						showBottomInformation();
 					}
 				}
 			}
@@ -104,7 +105,7 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 				element.setAttribute("timestamp", dateTimeToShortForm(date));
 				parser.saveListToXML();
 				
-				showBottomInformation(item);
+				showBottomInformation();
 			}
 		});
 		
@@ -143,7 +144,7 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 							}
 					parser.saveListToXML();
 					
-					showBottomInformation(item);
+					showBottomInformation();
 				}			
 			}
 		});
@@ -156,7 +157,8 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
 				adapter.clickOnItem(position);
-				showBottomInformation((Item) adapter.getItem(position));
+				selectedItem = (Item) adapter.getItem(position);
+				showBottomInformation();
 			}
 		});
 		registerForContextMenu(mList);
@@ -187,6 +189,8 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 			parser.saveListToXML();
 			
 			adapter.refreshList();
+			selectedItem = null;
+			showBottomInformation();
 		}
 		if (mItem.getItemId()== CM_CANCEL_ID){
 			return true;
@@ -229,21 +233,27 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 		calendar.get(Calendar.MINUTE);
 	}
 	
-	public void showBottomInformation(Item item){
-		textView1.setText(item.getTitle());
-		Node node = item.getNode();
-		Element element = (Element) node;
-		if (element.hasAttribute("timestamp")){
-			startButton.setEnabled(false);
-			runButton.setEnabled(false);
-			stopButton.setEnabled(true);
-		}else{
-			startButton.setEnabled(true);
-			stopButton.setEnabled(false);
-			if (element.hasAttribute("type")&& element.hasAttribute("path")){
-				runButton.setEnabled(true);
-			}else{
+	public void showBottomInformation(){
+		runButton.setEnabled(false);
+		startButton.setEnabled(false);
+		stopButton.setEnabled(false);
+		textView1.setText("");
+		if (selectedItem != null){
+			textView1.setText(selectedItem.getTitle());
+			Node node = selectedItem.getNode();
+			Element element = (Element) node;
+			if (element.hasAttribute("timestamp")){
+				startButton.setEnabled(false);
 				runButton.setEnabled(false);
+				stopButton.setEnabled(true);
+			}else{
+				startButton.setEnabled(true);
+				stopButton.setEnabled(false);
+				if (element.hasAttribute("type")&& element.hasAttribute("path")){
+					runButton.setEnabled(true);
+				}else{
+					runButton.setEnabled(false);
+				}
 			}
 		}
 	}
