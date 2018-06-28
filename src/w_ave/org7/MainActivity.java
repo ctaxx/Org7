@@ -59,7 +59,6 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 	//	adapter.setContext(this);
 		
 		runButton = (Button) findViewById(R.id.runButton);
-		runButton.setEnabled(false);
 		runButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -93,7 +92,6 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 		});
 		
 		startButton = (Button) findViewById(R.id.startButton);
-		startButton.setEnabled(false);
 		startButton.setOnClickListener(new OnClickListener() {	
 			@Override
 			public void onClick(View wiew) {
@@ -110,7 +108,6 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 		});
 		
 		stopButton = (Button) findViewById(R.id.stopButton);
-		stopButton.setEnabled(false);
 		stopButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -161,6 +158,7 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 				showBottomInformation();
 			}
 		});
+		showBottomInformation();
 		registerForContextMenu(mList);
 	}
 	
