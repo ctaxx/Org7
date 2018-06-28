@@ -13,6 +13,7 @@ import org.w3c.dom.Node;
 import w_ave.org7.NewItemDialog.NewItemDialogListener;
 import w_ave.org7.reading.FactoryBuilder;
 import android.os.Bundle;
+import android.os.Environment;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
@@ -54,6 +55,9 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 		
 		parser = new ParserXML();
 		items = parser.parse();
+		
+		FileItem sdcard = new FileItem (Environment.getExternalStorageDirectory());
+		items = sdcard.getChilds();
 		
 		adapter = new ListAdapter2(this, items);
 	//	adapter.setContext(this);
@@ -155,7 +159,7 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 					long id) {
 				adapter.clickOnItem(position);
 				selectedItem = (Item) adapter.getItem(position);
-				showBottomInformation();
+//				showBottomInformation();
 			}
 		});
 		showBottomInformation();
