@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 public class ListAdapter2 extends BaseAdapter {
 	
+	//TODO add lazy loading
+	
 	private LayoutInflater mLayoutInflater;
 /** массив, который будет содержать видимые элементы иерархии и который
  *  будет показан в списке
@@ -35,7 +37,7 @@ public class ListAdapter2 extends BaseAdapter {
 	}
 
 	@Override
-	public Object getItem(int position) {
+	public Item getItem(int position) {
 		return hierarchyArray.get(position);
 	}
 

@@ -36,15 +36,23 @@ import android.widget.Toast;
 public class MainActivity extends Activity implements NewItemDialogListener{
 	
 	private static final int CM_CREATE_ID = 1;
-	private static final int CM_DELETE_ID = 2;
-	private static final int CM_CANCEL_ID = 3;
+	private static final int CM_CREATE_EXT_ID = 2;
+	private static final int CM_DELETE_ID = 3;
+	private static final int CM_CANCEL_ID = 4;
+	
+	private static final int STATE_CURRENT = 0;
+	private static final int STATE_FILE_DLG = 1;
+	
 	ParserXML parser;
-	ArrayListEx items;
-	ListAdapter2 adapter;
+	ArrayListEx items, fileItems;
+	ListAdapter2 adapter, fileAdapter;
 	TextView textView1;
-	Button startButton, stopButton, runButton;
+	Button startButton, stopButton, runButton, openButton, cancelButton;
+	ListView mList;
 	FactoryBuilder factoryBuilder = new FactoryBuilder();
-	private Item selectedItem = null;
+	//TODO too many entities show selection
+//	private Item selectedItem = null;
+	private int state;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +65,11 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 		items = parser.parse();
 		
 		FileItem sdcard = new FileItem (Environment.getExternalStorageDirectory());
-		items = sdcard.getChilds();
+		fileItems = sdcard.getChilds();
 		
 		adapter = new ListAdapter2(this, items);
+		fileAdapter = new ListAdapter2(this, fileItems);
+		
 	//	adapter.setContext(this);
 		
 		runButton = (Button) findViewById(R.id.runButton);
@@ -82,9 +92,8 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 					// Start an activity if it's safe
 					if (isIntentSafe) {
 						startActivityForResult(intent,1);
-	// ToDo: this code is the same as in startButton
-	// if you cancel opening the document you have to delete timestamp
-	// and revert button to initial state
+	// TODO this code is the same as in startButton
+	// TODO if you cancel opening the document you have to delete timestamp and revert button to initial state
 						Date date = new Date();
 						element.setAttribute("timestamp", dateTimeToShortForm(date));
 						parser.saveListToXML();
@@ -150,18 +159,49 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 			}
 		});
 		
-		ListView mList = (ListView) findViewById(R.id.listView);
+		openButton = (Button)findViewById(R.id.openButton);
+		openButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View view) {
+				
+				FragmentManager fm = getFragmentManager();
+				NewItemDialog newItemDialog = new NewItemDialog(fileAdapter.getSelectedItem().getTitle());
+				newItemDialog.show(fm, "fragment_new_item");	
+			}
+		});
+		
+		cancelButton = (Button)findViewById(R.id.cancelButton);
+		cancelButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View view) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		mList = (ListView) findViewById(R.id.listView);
 		mList.setAdapter(adapter);
 		mList.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
-				adapter.clickOnItem(position);
-				selectedItem = (Item) adapter.getItem(position);
-//				showBottomInformation();
+				if (state == STATE_CURRENT){
+					adapter.clickOnItem(position);
+//					selectedItem = (Item) adapter.getItem(position);
+					adapter.getItem(position).setSelected(true);
+				}
+				if (state == STATE_FILE_DLG){
+					fileAdapter.clickOnItem(position);
+//					selectedItem = (Item) fileAdapter.getItem(position);
+					fileAdapter.getItem(position).setSelected(true);
+				}
+				showBottomInformation();
 			}
 		});
+		setState(STATE_CURRENT);
 		showBottomInformation();
 		registerForContextMenu(mList);
 	}
@@ -170,6 +210,7 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo){
 		super.onCreateContextMenu(menu, v, menuInfo);
 		menu.add(0, CM_CREATE_ID, 0, "Новая запись");
+		menu.add(0, CM_CREATE_EXT_ID, 0, "Open media");
 		menu.add(0, CM_DELETE_ID, 0, "Удалить запись");
 		menu.add(0, CM_CANCEL_ID, 0, "Отменить");
 	}
@@ -181,17 +222,27 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 		if (mItem.getItemId()== CM_CREATE_ID){
 			adapter.setSelectedItem(acmi.position);
 			
+			showBottomInformation();
+			
 			FragmentManager fm = getFragmentManager();
 			NewItemDialog newItemDialog = new NewItemDialog();
 			newItemDialog.show(fm, "fragment_new_item");
 		}
-		if (mItem.getItemId()== CM_DELETE_ID){	
+		if (mItem.getItemId()== CM_CREATE_EXT_ID){
+			adapter.setSelectedItem(acmi.position);
+			
+			fileAdapter.refreshList();
+			setState(STATE_FILE_DLG);
+			
+			showBottomInformation();
+		}
+		if (mItem.getItemId()== CM_DELETE_ID){
 			
 			items.removeItem((Item) adapter.getItem(acmi.position));
 			parser.saveListToXML();
 			
 			adapter.refreshList();
-			selectedItem = null;
+//			selectedItem = null;
 			showBottomInformation();
 		}
 		if (mItem.getItemId()== CM_CANCEL_ID){
@@ -204,7 +255,13 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 	public void onFinishNewItemDialog(String inputText){
 		Toast.makeText(this, inputText, Toast.LENGTH_LONG).show();
 		
-		items.addItem(inputText, parser.createNode(inputText), adapter.getSelectedItem());
+		if (state == STATE_CURRENT){
+			items.addItem(inputText, parser.createNode(inputText), adapter.getSelectedItem());
+		}
+		if  (state == STATE_FILE_DLG){
+			items.addItem(inputText, parser.createNode(inputText), adapter.getSelectedItem());
+			setState(STATE_CURRENT);
+		}
 		adapter.refreshList();
 		parser.saveListToXML();
 	}
@@ -239,24 +296,59 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 		runButton.setEnabled(false);
 		startButton.setEnabled(false);
 		stopButton.setEnabled(false);
+		openButton.setEnabled(false);
+		cancelButton.setEnabled(false);
 		textView1.setText("");
-		if (selectedItem != null){
-			textView1.setText(selectedItem.getTitle());
-			Node node = selectedItem.getNode();
-			Element element = (Element) node;
-			if (element.hasAttribute("timestamp")){
-				startButton.setEnabled(false);
-				runButton.setEnabled(false);
-				stopButton.setEnabled(true);
-			}else{
-				startButton.setEnabled(true);
-				stopButton.setEnabled(false);
-				if (element.hasAttribute("type")&& element.hasAttribute("path")){
-					runButton.setEnabled(true);
-				}else{
+		if (state == STATE_CURRENT){
+			Item item = adapter.getSelectedItem();
+			if (item != null){
+				textView1.setText(item.getTitle());
+				Node node = item.getNode();
+				Element element = (Element) node;
+				if (element.hasAttribute("timestamp")){
+					startButton.setEnabled(false);
 					runButton.setEnabled(false);
+					stopButton.setEnabled(true);
+				}else{
+					startButton.setEnabled(true);
+					stopButton.setEnabled(false);
+					if (element.hasAttribute("type")&& element.hasAttribute("path")){
+						runButton.setEnabled(true);
+					}else{
+						runButton.setEnabled(false);
+					}
 				}
 			}
 		}
+		if (state == STATE_FILE_DLG){
+			Item item = fileAdapter.getSelectedItem();
+			if (item != null){
+				textView1.setText(item.getTitle());
+				openButton.setEnabled(true);
+				cancelButton.setEnabled(true);
+			}
+		}
+	}
+	
+	private void setState(int state){
+		this.state = state;
+//		selectedItem = null;
+		if (state == STATE_CURRENT){
+			mList.setAdapter(adapter);
+			openButton.setVisibility(View.INVISIBLE);
+			cancelButton.setVisibility(View.INVISIBLE);
+			runButton.setVisibility(View.VISIBLE);
+			startButton.setVisibility(View.VISIBLE);
+			stopButton.setVisibility(View.VISIBLE);
+		}
+		if (state == STATE_FILE_DLG){
+			mList.setAdapter(fileAdapter);
+			openButton.setVisibility(View.VISIBLE);
+			cancelButton.setVisibility(View.VISIBLE);
+			runButton.setVisibility(View.INVISIBLE);
+			startButton.setVisibility(View.INVISIBLE);
+			stopButton.setVisibility(View.INVISIBLE);
+		}
+		
 	}
 }

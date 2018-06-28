@@ -109,6 +109,34 @@ public class ParserXML {
 		return node;
 	}
 	
+	public Node createNode(String text, String path){
+		Element node = doc.createElement("method");
+		
+		Attr attr = doc.createAttribute("name");
+		attr.setValue(text);
+		node.setAttributeNode(attr);
+		
+		GregorianCalendar calendar = new GregorianCalendar();
+		calendar.setTime(new Date());
+//		Date date = new Date();
+		
+		Attr dateAttr = doc.createAttribute("createdate");
+	//	dateAttr.setValue(date.toString());
+		dateAttr.setValue(""+calendar.get(Calendar.DAY_OF_MONTH)+"-"+
+		(calendar.get(Calendar.MONTH)+1)+"-"+calendar.get(Calendar.YEAR));
+		node.setAttributeNode(dateAttr);
+		
+		Attr pathAttr = doc.createAttribute("path");
+		pathAttr.setValue(path);
+		node.setAttributeNode(pathAttr);
+		
+		Attr extAttr = doc.createAttribute("type");
+		pathAttr.setValue(path.substring(path.lastIndexOf('.')+1));
+		node.setAttributeNode(extAttr);
+		
+		return node;
+	}
+	
 	public Node createTimeStamp(String date){
 		Element node = doc.createElement("timestamp");
 		
