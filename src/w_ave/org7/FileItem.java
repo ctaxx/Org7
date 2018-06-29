@@ -18,6 +18,10 @@ public class FileItem implements Item{
 	public FileItem (File f) {
 		file = f;
 	}
+	
+	public String getPath(){
+		return file.getAbsolutePath();
+	}
 		
 	@Override
 	public String getTitle() {
@@ -54,15 +58,15 @@ public class FileItem implements Item{
 	  return childs;
 	}
 
-	private int getCountChilds() {
-	  if (childs != null)
-	    return childs.size();
-			
-	  File[] files = file.listFiles();
-	  if (files == null)
-	    return 0;
-	  return files.length;
-	}
+//	private int getCountChilds() {
+//	  if (childs != null)
+//	    return childs.size();
+//			
+//	  File[] files = file.listFiles();
+//	  if (files == null)
+//	    return 0;
+//	  return files.length;
+//	}
 	
 	@Override
 	public boolean getOpened() {

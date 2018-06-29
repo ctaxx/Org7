@@ -176,8 +176,8 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 			
 			@Override
 			public void onClick(View view) {
-				// TODO Auto-generated method stub
-				
+				setState(STATE_CURRENT);
+				showBottomInformation();
 			}
 		});
 		
@@ -214,7 +214,7 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 		menu.add(0, CM_DELETE_ID, 0, "Удалить запись");
 		menu.add(0, CM_CANCEL_ID, 0, "Отменить");
 	}
-	
+	// TODO context menu has not to work with files
 	@Override
 	public boolean onContextItemSelected(MenuItem mItem){
 		AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) mItem.getMenuInfo();
@@ -259,7 +259,10 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 			items.addItem(inputText, parser.createNode(inputText), adapter.getSelectedItem());
 		}
 		if  (state == STATE_FILE_DLG){
-			items.addItem(inputText, parser.createNode(inputText), adapter.getSelectedItem());
+			FileItem fileItem = (FileItem) fileAdapter.getSelectedItem();
+//			Toast.makeText(this, "path= "+ fileItem.getPath(), Toast.LENGTH_LONG).show();
+			//TODO too complicated
+			items.addItem(inputText, parser.createNode(inputText, fileItem.getPath()), adapter.getSelectedItem());
 			setState(STATE_CURRENT);
 		}
 		adapter.refreshList();

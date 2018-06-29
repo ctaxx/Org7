@@ -29,7 +29,7 @@ public class FactoryBuilder {
 			return intentFactory.getIntent(path);
 		}
 		
-		if (type.equals("mp4")){
+		if (type.equals("mp4")||type.equals("avi")){
 			intentFactory = new VideoIntentFactory();
 			return intentFactory.getIntent(path);
 		}

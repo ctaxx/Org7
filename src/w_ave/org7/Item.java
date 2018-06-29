@@ -16,4 +16,5 @@ public interface Item {
 	public Node getNode();
 	public void setSelected(boolean isSelected);
 	public boolean getSelected();
+	public String getPath();
 }

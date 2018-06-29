@@ -131,7 +131,7 @@ public class ParserXML {
 		node.setAttributeNode(pathAttr);
 		
 		Attr extAttr = doc.createAttribute("type");
-		pathAttr.setValue(path.substring(path.lastIndexOf('.')+1));
+		extAttr.setValue(path.substring(path.lastIndexOf('.')+1));
 		node.setAttributeNode(extAttr);
 		
 		return node;

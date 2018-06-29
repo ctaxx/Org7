@@ -104,4 +104,9 @@ public class ListItem implements Item {
 		return isSelected;
 	}
 
+	@Override
+	public String getPath() {
+		return null;
+	}
+
 }

@@ -9,7 +9,8 @@ import android.os.Environment;
 public class PdfIntentFactory extends AbstractIntentFactory{
 
 	public Intent getIntent(String path){
-		File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+path);
+//		File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+path);
+		File file = new File(path);
 		intent = new Intent(Intent.ACTION_VIEW);
 		intent.setDataAndType(Uri.fromFile(file), "application/pdf");
 		intent.setFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);

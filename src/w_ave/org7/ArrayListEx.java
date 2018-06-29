@@ -19,6 +19,7 @@ public class ArrayListEx extends ArrayList<Item> {
 		ancestor.getChilds().remove(item);
 	}
 	
+	//TODO try to do it simpler
 	public void addItem(String inputText, Node node, Item ancestor){
 		Item item = new ListItem(inputText);
 		item.setNode(node);

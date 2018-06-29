@@ -10,7 +10,8 @@ public class VideoIntentFactory extends AbstractIntentFactory{
 
 	@Override
 	public Intent getIntent(String path) {
-		File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+path);
+//		File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+path);
+		File file = new File(path);
 		intent = new Intent(Intent.ACTION_VIEW);
 		intent.setDataAndType(Uri.fromFile(file), "video/*");
 		intent.setFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
