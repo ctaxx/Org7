@@ -9,6 +9,7 @@
     <string name="stop">stop</string>
     <string name="open">Open</string>
     <string name="cancel">Cancel</string>
+    <string name="up">^</string>
     <string name="title_activity_bottom_info_fragment">BottomInfoFragment</string>
 
 </resources>

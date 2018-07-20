@@ -19,6 +19,7 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -47,7 +48,7 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 	ArrayListEx items, fileItems;
 	ListAdapter2 adapter, fileAdapter;
 	TextView textView1;
-	Button startButton, stopButton, runButton, openButton, cancelButton;
+	Button upButton, startButton, stopButton, runButton, openButton, cancelButton;
 	ListView mList;
 	FactoryBuilder factoryBuilder = new FactoryBuilder();
 	//TODO too many entities show selection
@@ -71,6 +72,25 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 		fileAdapter = new ListAdapter2(this, fileItems);
 		
 	//	adapter.setContext(this);
+		upButton = (Button) findViewById(R.id.upButton);
+		upButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View view) {
+				Item item = adapter.getSelectedItem();
+				Item ancestor = item.getAncestor();
+				ArrayListEx childArray = ancestor.getChilds();
+				int index = childArray.indexOf(item);
+				
+				if (index > 0){
+					ancestor.getNode().insertBefore(item.getNode(), childArray.get(index-1).getNode());
+					// TODO it can be unnecessary
+					childArray.set(index, childArray.set(index-1, item));
+				}
+				adapter.refreshList();
+				parser.saveListToXML();
+			}
+		});
 		
 		runButton = (Button) findViewById(R.id.runButton);
 		runButton.setOnClickListener(new OnClickListener() {
@@ -296,6 +316,7 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 	}
 	
 	public void showBottomInformation(){
+		upButton.setEnabled(false);
 		runButton.setEnabled(false);
 		startButton.setEnabled(false);
 		stopButton.setEnabled(false);
@@ -308,6 +329,7 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 				textView1.setText(item.getTitle());
 				Node node = item.getNode();
 				Element element = (Element) node;
+				upButton.setEnabled(true);
 				if (element.hasAttribute("timestamp")){
 					startButton.setEnabled(false);
 					runButton.setEnabled(false);
@@ -340,6 +362,7 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 			mList.setAdapter(adapter);
 			openButton.setVisibility(View.INVISIBLE);
 			cancelButton.setVisibility(View.INVISIBLE);
+			upButton.setVisibility(View.VISIBLE);
 			runButton.setVisibility(View.VISIBLE);
 			startButton.setVisibility(View.VISIBLE);
 			stopButton.setVisibility(View.VISIBLE);
@@ -348,6 +371,7 @@ public class MainActivity extends Activity implements NewItemDialogListener{
 			mList.setAdapter(fileAdapter);
 			openButton.setVisibility(View.VISIBLE);
 			cancelButton.setVisibility(View.VISIBLE);
+			upButton.setVisibility(View.INVISIBLE);
 			runButton.setVisibility(View.INVISIBLE);
 			startButton.setVisibility(View.INVISIBLE);
 			stopButton.setVisibility(View.INVISIBLE);

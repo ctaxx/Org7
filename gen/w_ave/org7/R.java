@@ -28,20 +28,21 @@ public final class R {
         public static final int redfolder=0x7f020004;
     }
     public static final class id {
-        public static final int action_settings=0x7f09000d;
+        public static final int action_settings=0x7f09000e;
         public static final int bottomPanel=0x7f090005;
-        public static final int cancelButton=0x7f09000b;
+        public static final int cancelButton=0x7f09000c;
         public static final int editText=0x7f090003;
         public static final int listView=0x7f090004;
-        public static final int openButton=0x7f09000a;
-        public static final int runButton=0x7f090007;
-        public static final int startButton=0x7f090008;
+        public static final int openButton=0x7f09000b;
+        public static final int runButton=0x7f090008;
+        public static final int startButton=0x7f090009;
         public static final int startButtonFr=0x7f090001;
-        public static final int stopButton=0x7f090009;
+        public static final int stopButton=0x7f09000a;
         public static final int stopButtonFr=0x7f090002;
         public static final int textView1=0x7f090006;
         public static final int textViewFr=0x7f090000;
-        public static final int title=0x7f09000c;
+        public static final int title=0x7f09000d;
+        public static final int upButton=0x7f090007;
     }
     public static final class layout {
         public static final int bottom_info=0x7f030000;
@@ -62,7 +63,8 @@ public final class R {
         public static final int run=0x7f060004;
         public static final int start=0x7f060003;
         public static final int stop=0x7f060005;
-        public static final int title_activity_bottom_info_fragment=0x7f060008;
+        public static final int title_activity_bottom_info_fragment=0x7f060009;
+        public static final int up=0x7f060008;
     }
     public static final class style {
         /** 

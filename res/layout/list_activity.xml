@@ -30,13 +30,21 @@
             android:text="@string/hello_world" />
         
         <Button
+            android:id="@+id/upButton"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/runButton"
+            android:text="@string/up" >
+        </Button>
+        
+        <Button
             android:id="@+id/runButton"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/startButton"
             android:text="@string/run" >
-
         </Button>
 
         <Button
