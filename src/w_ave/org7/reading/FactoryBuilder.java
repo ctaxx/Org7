@@ -33,6 +33,12 @@ public class FactoryBuilder {
 			intentFactory = new VideoIntentFactory();
 			return intentFactory.getIntent(path);
 		}
+		
+		if (type.equals("djvu")){
+			intentFactory = new DjvuIntentFactory();
+			return intentFactory.getIntent(path);
+		}
+		
 		return null;	
 	}
 	
