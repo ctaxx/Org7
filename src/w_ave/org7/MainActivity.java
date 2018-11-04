@@ -42,7 +42,8 @@ public class MainActivity extends Activity implements NewItemDialogListener {
 	private static final int CM_CREATE_ID = 1;
 	private static final int CM_CREATE_EXT_ID = 2;
 	private static final int CM_DELETE_ID = 3;
-	private static final int CM_CANCEL_ID = 4;
+	private static final int CM_CHECK_ID = 4;
+	private static final int CM_CANCEL_ID = 5;
 
 	private static final int STATE_CURRENT = 0;
 	private static final int STATE_FILE_DLG = 1;
@@ -159,6 +160,7 @@ public class MainActivity extends Activity implements NewItemDialogListener {
 
 			@Override
 			public void onClick(View view) {
+				// todo: move to special method
 				Item item = adapter.getSelectedItem();
 
 				Element element = (Element) item.getNode();
@@ -263,6 +265,7 @@ public class MainActivity extends Activity implements NewItemDialogListener {
 		menu.add(0, CM_CREATE_ID, 0, "Новая запись");
 		menu.add(0, CM_CREATE_EXT_ID, 0, "Open media");
 		menu.add(0, CM_DELETE_ID, 0, "Удалить запись");
+		menu.add(0, CM_CHECK_ID, 0, "check");
 		menu.add(0, CM_CANCEL_ID, 0, "Отменить");
 	}
 
@@ -297,6 +300,9 @@ public class MainActivity extends Activity implements NewItemDialogListener {
 			adapter.refreshList();
 			// selectedItem = null;
 			showBottomInformation();
+		}
+		if (mItem.getItemId() == CM_CHECK_ID) {
+			setChecked();
 		}
 		if (mItem.getItemId() == CM_CANCEL_ID) {
 			return true;
@@ -416,6 +422,43 @@ public class MainActivity extends Activity implements NewItemDialogListener {
 			startButton.setVisibility(View.INVISIBLE);
 			stopButton.setVisibility(View.INVISIBLE);
 		}
+	}
 
+	private void setChecked() {
+		// todo: move to special method
+		Item item = adapter.getSelectedItem();
+
+		JsonObject resultObj = new JsonObject();
+
+		resultObj.addProperty("item", item.getTitle());
+
+		Date date = new Date();
+		resultObj.addProperty("checktime", dateTimeToShortForm(date));
+
+		String resultString = new String();
+
+		item = item.getAncestor();
+		while (item.getAncestor() != null) {
+			resultString = item.getTitle() + " --> " + resultString;
+			item = item.getAncestor();
+		}
+
+		resultObj.addProperty("path", resultString);
+
+		String json = resultObj.toString();
+
+		try {
+			File resultFile = new File(Environment
+					.getExternalStorageDirectory().getAbsolutePath()
+					+ resultPath);
+			Writer writer = new FileWriter(resultFile, true);
+			writer.write(json);
+			writer.write('\n');
+			writer.flush();
+			writer.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
