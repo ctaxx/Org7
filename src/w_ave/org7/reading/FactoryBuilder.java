@@ -39,6 +39,11 @@ public class FactoryBuilder {
 			return intentFactory.getIntent(path);
 		}
 		
+		if (type.equals("doc")||type.equals("rtf")){
+			intentFactory = new MSWordIntentFactory();
+			return intentFactory.getIntent(path);
+		}
+		
 		return null;	
 	}
 	
