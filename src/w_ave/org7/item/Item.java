@@ -1,6 +1,8 @@
-package w_ave.org7;
+package w_ave.org7.item;
 
 import org.w3c.dom.Node;
+
+import w_ave.org7.ArrayListEx;
 
 public interface Item {
 	public boolean getOpened();

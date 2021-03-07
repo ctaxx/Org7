@@ -3,6 +3,7 @@ package w_ave.org7;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import w_ave.org7.item.Item;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;

@@ -1,7 +1,12 @@
-package w_ave.org7;
+package w_ave.org7.item;
 
 import java.io.File;
+
 import org.w3c.dom.Node;
+
+import w_ave.org7.ArrayListEx;
+import w_ave.org7.R;
+import w_ave.org7.R.drawable;
 
 public class FileItem implements Item{
 	File file; 

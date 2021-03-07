@@ -14,7 +14,11 @@ import org.w3c.dom.Node;
 import com.google.gson.JsonObject;
 
 import w_ave.org7.NewItemDialog.NewItemDialogListener;
+import w_ave.org7.item.FileItem;
+import w_ave.org7.item.Item;
 import w_ave.org7.reading.FactoryBuilder;
+import w_ave.org7.utils.DateTimeUtils;
+import w_ave.org7.utils.FileUtils;
 import android.os.Bundle;
 import android.os.Environment;
 import android.app.Activity;
@@ -130,7 +134,7 @@ public class MainActivity extends Activity implements NewItemDialogListener {
 						// delete timestamp and revert button to initial state
 						Date date = new Date();
 						element.setAttribute("timestamp",
-								dateTimeToShortForm(date));
+								DateTimeUtils.dateTimeToShortForm(date));
 						parser.saveListToXML();
 
 						showBottomInformation();
@@ -148,7 +152,8 @@ public class MainActivity extends Activity implements NewItemDialogListener {
 				Date date = new Date();
 				Element element = (Element) item.getNode();
 
-				element.setAttribute("timestamp", dateTimeToShortForm(date));
+				element.setAttribute("timestamp",
+						DateTimeUtils.dateTimeToShortForm(date));
 				parser.saveListToXML();
 
 				showBottomInformation();
@@ -166,43 +171,24 @@ public class MainActivity extends Activity implements NewItemDialogListener {
 				Element element = (Element) item.getNode();
 				if (element.hasAttribute("timestamp")) {
 
-					JsonObject resultObj = new JsonObject();
+					JsonObject json = new JsonObject();
 
-					resultObj.addProperty("item", item.getTitle());
+					json.addProperty("item", item.getTitle());
 
-					resultObj.addProperty("begin",
-							element.getAttribute("timestamp"));
+					json.addProperty("begin", element.getAttribute("timestamp"));
 					element.removeAttribute("timestamp");
 
 					Date date = new Date();
-					resultObj.addProperty("end", dateTimeToShortForm(date));
+					json.addProperty("end",
+							DateTimeUtils.dateTimeToShortForm(date));
 
-					String resultString = new String();
+					json.addProperty("path", getChainOfAncestors(item));
 
-					item = item.getAncestor();
-					while (item.getAncestor() != null) {
-						resultString = item.getTitle() + " --> " + resultString;
-						item = item.getAncestor();
-					}
+					File resultFile = new File(Environment
+							.getExternalStorageDirectory().getAbsolutePath()
+							+ resultPath);
+					FileUtils.saveJson(resultFile, json.toString());
 
-					resultObj.addProperty("path", resultString);
-
-					String json = resultObj.toString();
-
-					try {
-						File resultFile = new File(Environment
-								.getExternalStorageDirectory()
-								.getAbsolutePath()
-								+ resultPath);
-						Writer writer = new FileWriter(resultFile, true);
-						writer.write(json);
-						writer.write('\n');
-						writer.flush();
-						writer.close();
-
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
 					parser.saveListToXML();
 
 					showBottomInformation();
@@ -350,16 +336,6 @@ public class MainActivity extends Activity implements NewItemDialogListener {
 		}
 	}
 
-	private String dateTimeToShortForm(Date date) {
-		GregorianCalendar calendar = new GregorianCalendar();
-		calendar.setTime(date);
-		return calendar.get(Calendar.YEAR) + "-"
-				+ (calendar.get(Calendar.MONTH) + 1) + "-"
-				+ calendar.get(Calendar.DAY_OF_MONTH) + " "
-				+ calendar.get(Calendar.HOUR_OF_DAY) + ":"
-				+ calendar.get(Calendar.MINUTE);
-	}
-
 	public void showBottomInformation() {
 		upButton.setEnabled(false);
 		runButton.setEnabled(false);
@@ -428,37 +404,27 @@ public class MainActivity extends Activity implements NewItemDialogListener {
 		// todo: move to special method
 		Item item = adapter.getSelectedItem();
 
-		JsonObject resultObj = new JsonObject();
+		JsonObject json = new JsonObject();
 
-		resultObj.addProperty("item", item.getTitle());
+		json.addProperty("item", item.getTitle());
 
 		Date date = new Date();
-		resultObj.addProperty("checktime", dateTimeToShortForm(date));
+		json.addProperty("checktime", DateTimeUtils.dateTimeToShortForm(date));
 
+		json.addProperty("path", getChainOfAncestors(item));
+
+		File resultFile = new File(Environment.getExternalStorageDirectory()
+				.getAbsolutePath() + resultPath);
+		FileUtils.saveJson(resultFile, json.toString());
+	}
+
+	public String getChainOfAncestors(Item item) {
 		String resultString = new String();
-
 		item = item.getAncestor();
 		while (item.getAncestor() != null) {
 			resultString = item.getTitle() + " --> " + resultString;
 			item = item.getAncestor();
 		}
-
-		resultObj.addProperty("path", resultString);
-
-		String json = resultObj.toString();
-
-		try {
-			File resultFile = new File(Environment
-					.getExternalStorageDirectory().getAbsolutePath()
-					+ resultPath);
-			Writer writer = new FileWriter(resultFile, true);
-			writer.write(json);
-			writer.write('\n');
-			writer.flush();
-			writer.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		return resultString;
 	}
 }

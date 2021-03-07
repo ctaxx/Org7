@@ -1,7 +1,11 @@
 package w_ave.org7;
 
 import java.util.ArrayList;
+
 import org.w3c.dom.Node;
+
+import w_ave.org7.item.Item;
+import w_ave.org7.item.ListItem;
 
 public class ArrayListEx extends ArrayList<Item> {
 
